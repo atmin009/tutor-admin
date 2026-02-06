@@ -397,7 +397,7 @@ const CourseEditor = () => {
         ...prev,
         [sectionId]: [...(prev[sectionId] || []), response.data.data],
       }));
-      setNewLesson({ title: '', contentType: 'video', contentUrl: '', duration: '' });
+      setNewLesson({ title: '', contentType: 'video', contentUrl: '', contentText: '', duration: '' });
       setShowLessonForm(null);
     } catch (err: any) {
       console.error('Failed to create lesson:', err);
@@ -411,6 +411,7 @@ const CourseEditor = () => {
       title: lesson.title,
       contentType: lesson.contentType,
       contentUrl: lesson.contentUrl || '',
+      contentText: '',
       duration: lesson.duration?.toString() || '',
     });
     setShowLessonForm(null); // Close add form if open

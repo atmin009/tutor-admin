@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/axios';
 import Drawer from '../components/ui/Drawer';
 
@@ -41,7 +40,6 @@ interface CouponUsage {
 }
 
 export default function Coupons() {
-  const navigate = useNavigate();
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +47,6 @@ export default function Coupons() {
   const [totalPages, setTotalPages] = useState(1);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
-  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [usageData, setUsageData] = useState<CouponUsage[]>([]);
   const [showUsageModal, setShowUsageModal] = useState(false);
 

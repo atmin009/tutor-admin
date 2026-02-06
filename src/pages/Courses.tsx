@@ -39,11 +39,6 @@ interface CoursesResponse {
   };
 }
 
-interface ApiResponse {
-  data: CoursesResponse;
-  message: string;
-}
-
 // Debounce hook
 const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
