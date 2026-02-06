@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import Login from '../pages/Login';
+import Register from '../pages/Register';
 import AdminLayout from '../layouts/AdminLayout';
 import Dashboard from '../pages/Dashboard';
 import Users from '../pages/Users';
@@ -24,6 +25,7 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route
         path="/admin/*"
         element={
