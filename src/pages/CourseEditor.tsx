@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Label } from '../components/ui/Label';
 import Badge from '../components/ui/Badge';
+import VideoPlayer from '../components/VideoPlayer';
 
 interface Teacher {
   id: number;
@@ -485,6 +486,14 @@ const CourseEditor = () => {
     }
   };
 
+  const resolvedPreviewVideoUrl = useMemo(() => {
+    if (!formData.previewVideoUrl) return null;
+    if (formData.previewVideoUrl.startsWith('http')) {
+      return formData.previewVideoUrl;
+    }
+    return `http://localhost:4000${formData.previewVideoUrl}`;
+  }, [formData.previewVideoUrl]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -696,11 +705,12 @@ const CourseEditor = () => {
                               allowFullScreen
                             />
                           ) : (
-                            <video
-                              src={`http://localhost:4000${formData.previewVideoUrl}`}
-                              controls
-                              className="h-full w-full"
-                            />
+                            resolvedPreviewVideoUrl && (
+                              <VideoPlayer
+                                src={resolvedPreviewVideoUrl}
+                                className="h-full w-full"
+                              />
+                            )
                           )}
                         </div>
                         <button

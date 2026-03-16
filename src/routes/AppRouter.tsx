@@ -10,6 +10,7 @@ import TeacherDashboard from '../pages/TeacherDashboard';
 import Courses from '../pages/Courses';
 import CourseEditor from '../pages/CourseEditor';
 import Coupons from '../pages/Coupons';
+import BundlePromotions from '../pages/BundlePromotions';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -42,6 +43,7 @@ const AppRouter = () => {
         <Route path="courses/new" element={<CourseEditor />} />
         <Route path="courses/:id" element={<CourseEditor />} />
         <Route path="coupons" element={<Coupons />} />
+        <Route path="bundles" element={<BundlePromotions />} />
         <Route path="" element={<Navigate to="dashboard" replace />} />
       </Route>
       <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
