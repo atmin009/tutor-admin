@@ -55,7 +55,8 @@ const VideoPlayer = ({ src, poster, className }: VideoPlayerProps) => {
 
         if (!availableQualities.length) return;
 
-        player.quality = {
+        // Plyr types declare quality as number; at runtime it accepts this object for HLS
+        (player as { quality: unknown }).quality = {
           default: Math.max(...availableQualities),
           options: availableQualities,
           forced: true,
