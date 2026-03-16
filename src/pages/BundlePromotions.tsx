@@ -272,7 +272,21 @@ export default function BundlePromotions() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex flex-col items-end gap-1 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
+                        {bundle.status === 'active' && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const path = `/bundles/${bundle.id}`;
+                              navigator.clipboard?.writeText(path).then(
+                                () => alert('คัดลอก path แล้ว: ' + path + '\nนำไปต่อกับโดเมนหน้าลูกค้า เช่น https://yoursite.com' + path)
+                              ).catch(() => alert('ลิงก์แชร์: ' + path));
+                            }}
+                            className="text-sm text-slate-600 hover:text-slate-900"
+                          >
+                            ลิงก์แชร์
+                          </button>
+                        )}
                         <button
                           onClick={() => handleEdit(bundle)}
                           className="text-sm text-brand hover:text-brand/80"
