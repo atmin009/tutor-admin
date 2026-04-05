@@ -385,12 +385,36 @@ const CourseEditor = () => {
     if (!id || isNew || !newLesson.title.trim()) return;
 
     try {
+      let contentUrl = newLesson.contentUrl || null;
+
+      // If file type, upload file first
+      if (newLesson.contentType === 'file') {
+        if (!newLessonFile) {
+          alert('กรุณาเลือกไฟล์ก่อนบันทึกบทเรียน');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', newLessonFile);
+        const uploadResponse = await axiosInstance.post<{ data: { url: string }; message: string }>(
+          `/admin/sections/${sectionId}/upload-attachment`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        contentUrl = uploadResponse.data.data.url;
+      }
+
       const response = await axiosInstance.post<{ data: Lesson; message: string }>(
         `/admin/sections/${sectionId}/lessons`,
         {
           title: newLesson.title.trim(),
           contentType: newLesson.contentType,
-          contentUrl: newLesson.contentUrl || null,
+          contentUrl: newLesson.contentType === 'text' ? null : contentUrl,
+          contentText: newLesson.contentType === 'text' ? newLesson.contentText : null,
           duration: newLesson.duration ? parseInt(newLesson.duration, 10) : null,
         }
       );
@@ -399,6 +423,7 @@ const CourseEditor = () => {
         [sectionId]: [...(prev[sectionId] || []), response.data.data],
       }));
       setNewLesson({ title: '', contentType: 'video', contentUrl: '', contentText: '', duration: '' });
+      setNewLessonFile(null);
       setShowLessonForm(null);
     } catch (err: any) {
       console.error('Failed to create lesson:', err);
@@ -486,13 +511,17 @@ const CourseEditor = () => {
     }
   };
 
+  const apiBase = import.meta.env.VITE_API_BASE_URL
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '')
+    : '';
+
   const resolvedPreviewVideoUrl = useMemo(() => {
     if (!formData.previewVideoUrl) return null;
     if (formData.previewVideoUrl.startsWith('http')) {
       return formData.previewVideoUrl;
     }
-    return `http://localhost:4000${formData.previewVideoUrl}`;
-  }, [formData.previewVideoUrl]);
+    return `${apiBase}${formData.previewVideoUrl}`;
+  }, [formData.previewVideoUrl, apiBase]);
 
   if (isLoading) {
     return (
@@ -638,7 +667,7 @@ const CourseEditor = () => {
                     {formData.coverImage && (
                       <div className="relative">
                         <img
-                          src={`http://localhost:4000${formData.coverImage}`}
+                          src={formData.coverImage?.startsWith('http') ? formData.coverImage : `${apiBase}${formData.coverImage}`}
                           alt="Cover"
                           className="h-48 w-full rounded-lg object-cover border border-slate-200"
                         />

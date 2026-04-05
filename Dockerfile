@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # Admin Dockerfile - Multi-stage build with Vite
 FROM node:22-alpine AS base
 
@@ -6,7 +7,8 @@ FROM base AS deps
 WORKDIR /app
 COPY package.json ./
 COPY package-lock.json* ./
-RUN npm ci || npm install
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci || npm install
 
 # Build stage
 FROM base AS builder
